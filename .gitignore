@@ -1,0 +1,8 @@
+.idea
+xtend-gen
+/target/
+.project
+.classpath
+.settings
+/src/main/webapp/node_modules
+ControlGastos.iml
