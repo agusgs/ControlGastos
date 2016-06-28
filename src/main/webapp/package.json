@@ -1,0 +1,15 @@
+{
+  "name": "control-gastos",
+  "version": "1.0.0",
+  "description": "control de gastos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "agusgs",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.7",
+    "bootstrap": "^3.3.6"
+  }
+}
