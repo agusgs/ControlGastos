@@ -7,4 +7,5 @@ class Usuario {
 
     String nombre
     String password
+    Boolean logueado
 }
