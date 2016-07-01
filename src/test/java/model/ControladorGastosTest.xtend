@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.Before
 import repositorios.GastosRepository
 import static org.assertj.core.api.Assertions.*
+import org.joda.time.DateTime
 
 class ControladorGastosTest {
 
@@ -126,5 +127,52 @@ class ControladorGastosTest {
         assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto INGREsado")
         .exists[gasto | gasto == miGasto2])
         .isTrue()
+    }
+
+    @Test
+    def void siNoHayGastosIngresadosElIndiceInflacionarioEs0(){
+        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "un gasto")).isEqualTo(0.0)
+    }
+
+    @Test
+    def void siHayUnGastoIngresadoElIndiceEs0(){
+        controladorGastos.agregarGasto("un gasto", 1.0, usuario)
+        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "un gasto")).isEqualTo(0.0)
+    }
+
+    @Test
+    def void indiceConDosGastosElMismoAnio(){
+        controladorGastos.agregarGasto("papas", 1.0, usuario)
+        controladorGastos.agregarGasto("papas", 2.0, usuario)
+
+        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "papas")).isEqualTo(50.0)
+    }
+
+    @Test
+    def void indiceConVariosGastosElMismoAnioEnDistintosMeses(){
+        val miGasto1 = controladorGastos.agregarGasto("papas", 1.0, usuario)
+        val miGasto2 = controladorGastos.agregarGasto("papas", 2.0, usuario)
+        val miGasto3 = controladorGastos.agregarGasto("papas", 5.0, usuario)
+
+        miGasto1.fechaCreacion = new DateTime(2016, 6, 6, 6, 6)
+        miGasto2.fechaCreacion = new DateTime(2016, 7, 6, 6, 6)
+        miGasto3.fechaCreacion = new DateTime(2016, 8, 6, 6, 6)
+
+        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "papas")).isEqualTo(80.0)
+    }
+
+    @Test
+    def void indiceConGastosEnDistintosAnios(){
+        val miGasto1 = controladorGastos.agregarGasto("papas", 1.0, usuario)
+        val miGasto2 = controladorGastos.agregarGasto("papas", 2.0, usuario)
+        val miGasto3 = controladorGastos.agregarGasto("papas", 5.0, usuario)
+        val miGasto4 = controladorGastos.agregarGasto("papas", 123.0, usuario)
+
+        miGasto1.fechaCreacion = new DateTime(2016, 6, 6, 6, 6)
+        miGasto2.fechaCreacion = new DateTime(2016, 7, 6, 6, 6)
+        miGasto3.fechaCreacion = new DateTime(2015, 8, 6, 6, 6)
+        miGasto4.fechaCreacion = new DateTime(2015, 8, 6, 6, 6)
+
+        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "papas")).isEqualTo(50.0)
     }
 }

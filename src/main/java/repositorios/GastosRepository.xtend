@@ -4,6 +4,7 @@ import java.util.List
 import model.Gasto
 import model.Usuario
 import model.ValidadorParametros
+import org.joda.time.DateTime
 
 class GastosRepository {
 
@@ -28,6 +29,11 @@ class GastosRepository {
 
     def getGastosPorDescripcion(Usuario usuario, String descripcionBuscada){
         getGastosPorUsuario(usuario).filter[gasto | gasto.descripcion == descripcionBuscada]
+    }
+
+    def getGastosUlimoAnioPorDescripcion(Usuario usuario, String descripcionBuscada){
+        val hoy = DateTime.now()
+        getGastosPorDescripcion(usuario, descripcionBuscada).filter[gasto | gasto.fechaCreacion.year() == hoy.year()]
     }
 
     def validarParametrosNoNulos(String descripcionGasto, Double montoGasto, Usuario usuarioGasto){

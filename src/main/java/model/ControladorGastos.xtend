@@ -36,8 +36,20 @@ class ControladorGastos {
         var textoNormalizado = textoANormalizar
         textoNormalizado = textoNormalizado.toUpperCase()
         textoNormalizado = textoNormalizado.trim()
-        System.out.println(textoNormalizado.trim())
-        System.out.println(textoNormalizado)
         textoNormalizado
+    }
+
+    def calcularIndiceInflacionario(Usuario usuario, String descripcion){
+        var gastosDelUltimoAnio = gastosRepo.getGastosUlimoAnioPorDescripcion(usuario, normalizar(descripcion))
+        gastosDelUltimoAnio.sortBy[fechaCreacion]
+
+        if(gastosDelUltimoAnio.isEmpty){
+            return 0
+        }
+
+        CalculadorIndiceInflacionario.para(
+                gastosDelUltimoAnio.last().monto,
+                gastosDelUltimoAnio.head().monto)
+        .calcular()
     }
 }
