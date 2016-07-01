@@ -2,11 +2,15 @@ package model
 
 import exceptions.PasswordIncorrectaException
 import exceptions.UsuarioYaEstaLogueadoException
-import repositorios.RepositorioUsuarios
+import repositorios.UsuariosRepository
 
-class Session {
+class SessionFactory {
 
-    RepositorioUsuarios repoUsuarios;
+    UsuariosRepository repoUsuarios;
+
+    new(UsuariosRepository repoUsuarios){
+        this.repoUsuarios = repoUsuarios
+    }
 
     def login(String usuarioNombre, String usuarioPassword){
         val usuario = repoUsuarios.getUsuarioPorNombre(usuarioNombre)
