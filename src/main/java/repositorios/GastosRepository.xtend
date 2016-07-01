@@ -31,9 +31,8 @@ class GastosRepository {
         getGastosPorUsuario(usuario).filter[gasto | gasto.descripcion == descripcionBuscada]
     }
 
-    def getGastosUlimoAnioPorDescripcion(Usuario usuario, String descripcionBuscada){
-        val hoy = DateTime.now()
-        getGastosPorDescripcion(usuario, descripcionBuscada).filter[gasto | gasto.fechaCreacion.year() == hoy.year()]
+    def getGastosPorAnioDescripcion(Integer anio, Usuario usuario, String descripcionBuscada){
+        getGastosPorDescripcion(usuario, descripcionBuscada).filter[gasto | gasto.fechaCreacion.getYear() == anio]
     }
 
     def validarParametrosNoNulos(String descripcionGasto, Double montoGasto, Usuario usuarioGasto){

@@ -39,8 +39,8 @@ class ControladorGastos {
         textoNormalizado
     }
 
-    def calcularIndiceInflacionario(Usuario usuario, String descripcion){
-        var gastosDelUltimoAnio = gastosRepo.getGastosUlimoAnioPorDescripcion(usuario, normalizar(descripcion))
+    def calcularIndiceInflacionario(Integer anio, String descripcion, Usuario usuario){
+        var gastosDelUltimoAnio = gastosRepo.getGastosPorAnioDescripcion(anio, usuario, normalizar(descripcion))
         gastosDelUltimoAnio.sortBy[fechaCreacion]
 
         if(gastosDelUltimoAnio.isEmpty){

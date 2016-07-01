@@ -131,13 +131,13 @@ class ControladorGastosTest {
 
     @Test
     def void siNoHayGastosIngresadosElIndiceInflacionarioEs0(){
-        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "un gasto")).isEqualTo(0.0)
+        assertThat(controladorGastos.calcularIndiceInflacionario(2016, "un gasto", usuario)).isEqualTo(0.0)
     }
 
     @Test
     def void siHayUnGastoIngresadoElIndiceEs0(){
         controladorGastos.agregarGasto("un gasto", 1.0, usuario)
-        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "un gasto")).isEqualTo(0.0)
+        assertThat(controladorGastos.calcularIndiceInflacionario(2016, "un gasto", usuario)).isEqualTo(0.0)
     }
 
     @Test
@@ -145,7 +145,7 @@ class ControladorGastosTest {
         controladorGastos.agregarGasto("papas", 1.0, usuario)
         controladorGastos.agregarGasto("papas", 2.0, usuario)
 
-        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "papas")).isEqualTo(50.0)
+        assertThat(controladorGastos.calcularIndiceInflacionario(2016, "papas", usuario)).isEqualTo(50.0)
     }
 
     @Test
@@ -158,7 +158,7 @@ class ControladorGastosTest {
         miGasto2.fechaCreacion = new DateTime(2016, 7, 6, 6, 6)
         miGasto3.fechaCreacion = new DateTime(2016, 8, 6, 6, 6)
 
-        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "papas")).isEqualTo(80.0)
+        assertThat(controladorGastos.calcularIndiceInflacionario(2016, "papas", usuario)).isEqualTo(80.0)
     }
 
     @Test
@@ -173,6 +173,6 @@ class ControladorGastosTest {
         miGasto3.fechaCreacion = new DateTime(2015, 8, 6, 6, 6)
         miGasto4.fechaCreacion = new DateTime(2015, 8, 6, 6, 6)
 
-        assertThat(controladorGastos.calcularIndiceInflacionario(usuario, "papas")).isEqualTo(50.0)
+        assertThat(controladorGastos.calcularIndiceInflacionario(2016, "papas", usuario)).isEqualTo(50.0)
     }
 }

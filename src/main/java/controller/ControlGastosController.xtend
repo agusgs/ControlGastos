@@ -83,6 +83,29 @@ class ControlGastosController {
         }
     }
 
+    @Get("/indice/:anio/:descripcion/:usuarioId")
+    def indiceInflacionarioEndpoint(){
+        response.contentType = "application/json"
+        val iDescripcion = String.valueOf(descripcion)
+        val iUsuarioId = Integer.valueOf(usuarioId)
+        val iAnio = Integer.valueOf(anio)
+
+        try {
+            traerIndiceInflacionario(iAnio, iDescripcion, iUsuarioId)
+            ok()
+        }
+        catch (BaseControlGastosException e) {
+            badRequest(e.message);
+        }
+    }
+
+    def traerIndiceInflacionario(Integer anio, String descripcion, Integer usuarioId){
+        controladorGastos.calcularIndiceInflacionario(
+                anio,
+                descripcion,
+                controladorUsuarios.usuarioConId(usuarioId))
+    }
+
     def traerGastosDeDescripcion(String descripcion, Integer usuarioId){
         controladorGastos.filtrarPorDescripcion(controladorUsuarios.usuarioConId(usuarioId), descripcion)
     }
