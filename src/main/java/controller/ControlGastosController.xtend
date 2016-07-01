@@ -2,15 +2,16 @@ package controller
 
 import org.uqbar.xtrest.api.annotation.Controller
 import org.uqbar.xtrest.api.annotation.Post
-import model.Session
+import model.SessionFactory
+import repositorios.UsuariosRepository
 
 @Controller
 class ControlGastosController {
 
-    Session session
+    SessionFactory sessionFactory
 
     new(){
-        session = new Session()
+        sessionFactory = new SessionFactory(new UsuariosRepository())
     }
 
     @Post("/login/:usuarioNombre/:usuarioPassword")
@@ -29,6 +30,6 @@ class ControlGastosController {
     }
 
     def efectuarLogin(String usuarioNombre, String usuarioPassword){
-        session.login(usuarioNombre, usuarioPassword)
+        sessionFactory.login(usuarioNombre, usuarioPassword)
     }
 }
