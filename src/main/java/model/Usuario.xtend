@@ -8,4 +8,10 @@ class Usuario {
     String nombre
     String password
     Boolean logueado
+
+    new(String nombreUsuario, String passwordUsuario){
+        this.nombre = nombreUsuario
+        this.password = passwordUsuario
+        this.logueado = false
+    }
 }
