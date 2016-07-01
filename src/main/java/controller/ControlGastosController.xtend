@@ -6,14 +6,17 @@ import model.ControladorUsuarios
 import repositorios.UsuariosRepository
 import org.uqbar.xtrest.api.annotation.Put
 import exceptions.BaseControlGastosException
+import model.ControladorGastos
+import repositorios.GastosRepository
 
 @Controller
 class ControlGastosController {
 
     ControladorUsuarios controladorUsuarios
-
+    ControladorGastos controladorGastos
     new(){
         controladorUsuarios = new ControladorUsuarios(new UsuariosRepository())
+        controladorGastos = new ControladorGastos(new GastosRepository())
     }
 
     @Post("/login/:usuarioNombre/:usuarioPassword")
@@ -46,10 +49,24 @@ class ControlGastosController {
         }
     }
 
-    @Put("/gastos/:descripcion/:monto/:idUsuario")
+    @Put("/gastos/:descripcion/:monto/:usuarioId")
     def nuevoGastoEndpoint(){
+        response.contentType = "application/json"
+        val iDescripcion = String.valueOf(descripcion)
+        val iMonto = Double.valueOf(monto)
+        val iUsuarioId = Integer.valueOf(usuarioId)
 
+        try {
+            efectuarCreacionDeGasto(iDescripcion, iMonto, iUsuarioId)
+            ok()
+        }
+        catch (BaseControlGastosException e) {
+            badRequest(e.message);
+        }
+    }
 
+    def efectuarCreacionDeGasto(String descripcion, Double monto, Integer usuarioId){
+        controladorGastos.agregarGasto(descripcion, monto, controladorUsuarios.usuarioConId(usuarioId))
     }
 
     def efectuarRegistracion(String usuarioNombre, String usuarioPassword){

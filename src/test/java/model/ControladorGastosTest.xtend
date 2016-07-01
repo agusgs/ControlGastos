@@ -13,7 +13,7 @@ class ControladorGastosTest {
 
     @Before
     def void setUp(){
-        this.usuario = new Usuario("agus", "pass1")
+        this.usuario = new Usuario(1, "agus", "pass1")
         this.controladorGastos = new ControladorGastos(new GastosRepository)
     }
 
@@ -40,7 +40,7 @@ class ControladorGastosTest {
 
     @Test
     def void elTotalDeGastosEsLaSumaDeLosGastosDeUnUsuario(){
-        val otroUsuario = new Usuario("otroUsuario", "pass1234")
+        val otroUsuario = new Usuario(1, "otroUsuario", "pass1234")
 
         controladorGastos.agregarGasto("nuevo gasto", 100.0, usuario)
         controladorGastos.agregarGasto("otoro gasto", 200.0, usuario)
@@ -85,7 +85,7 @@ class ControladorGastosTest {
     @Test
     def void filtrarConVariosUsuariosConVariosGastos(){
 
-        val otroUsuario = new Usuario("otro usuario", "pass1234")
+        val otroUsuario = new Usuario(1, "otro usuario", "pass1234")
 
         val miGasto1 = controladorGastos.agregarGasto("gasto ingresado", 1.0, usuario)
         val miGasto2 = controladorGastos.agregarGasto("gasto ingresado", 2.0, usuario)

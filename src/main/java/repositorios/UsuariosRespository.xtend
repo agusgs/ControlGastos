@@ -13,15 +13,23 @@ class UsuariosRepository {
     final String PASSWORD_REGEX = "(?=(.*?\\d){1})[a-zA-Z0-9]{5,}"
 
     List<Usuario> usuarios
+    Integer contadorId
 
     new(){
         usuarios = newArrayList();
+        contadorId = 0
     }
 
     def getUsuarioPorNombre(String usuarioNombre){
-        validarExistenciaDeUsuario(usuarioNombre)
+        validarExistenciaDeUsuarioPorNombre(usuarioNombre)
 
         this.usuarios.findFirst[usuario | usuario.nombre == usuarioNombre]
+    }
+
+    def getUsuarioPorId(Integer usuarioId){
+        validarExistenciaDeUsuarioPorId(usuarioId)
+
+        usuarios.findFirst[usuario | usuario.id == usuarioId]
     }
 
     def create(String usuarioNombre, String passwordUsuario){
@@ -29,7 +37,9 @@ class UsuariosRepository {
         validarUsuarioDuplicado(usuarioNombre)
         validarPasswordMalFormada(passwordUsuario)
 
-        val usuarioNuevo =  new Usuario(usuarioNombre, passwordUsuario)
+        contadorId ++
+
+        val usuarioNuevo =  new Usuario(contadorId, usuarioNombre, passwordUsuario)
         this.usuarios.add(usuarioNuevo)
 
         usuarioNuevo
@@ -37,6 +47,16 @@ class UsuariosRepository {
 
     def all(){
         this.usuarios
+    }
+
+    def validarExistenciaDeUsuarioPorId(Integer usuarioId){
+        if(!(existeUsuarioPorId(usuarioId))){
+            throw new UsuarioInexistenteException(usuarioId.toString())
+        }
+    }
+
+    def existeUsuarioPorId(Integer usuarioId){
+        this.usuarios.exists[usuario | usuario.id == usuarioId]
     }
 
     def validarParametrosNoNulos(String usuarioNombre, String passwordUsuario){
@@ -54,18 +74,18 @@ class UsuariosRepository {
     }
 
     def validarUsuarioDuplicado(String nombre){
-        if(existeUsuario(nombre)){
+        if(existeUsuarioPorNombre(nombre)){
             throw new UsuarioDuplicadoException(nombre)
         }
     }
 
-    def validarExistenciaDeUsuario(String usuarioNombre){
-        if(!(existeUsuario(usuarioNombre))){
+    def validarExistenciaDeUsuarioPorNombre(String usuarioNombre){
+        if(!(existeUsuarioPorNombre(usuarioNombre))){
            throw new UsuarioInexistenteException(usuarioNombre)
         }
     }
 
-    def existeUsuario(String usuarioNombre){
+    def existeUsuarioPorNombre(String usuarioNombre){
         this.usuarios.exists[usuario | usuario.nombre == usuarioNombre]
     }
 

@@ -27,6 +27,10 @@ class ControladorUsuarios {
         repoUsuarios.create(usuarioNombre, usuarioPassword)
     }
 
+    def usuarioConId(Integer usuarioId){
+        repoUsuarios.getUsuarioPorId(usuarioId)
+    }
+
     def validarUsuarioYaLogeado(Usuario usuario){
         if(usuario.logueado){
             throw new UsuarioYaEstaLogueadoException(usuario)
