@@ -4,7 +4,7 @@ import exceptions.PasswordIncorrectaException
 import exceptions.UsuarioYaEstaLogueadoException
 import repositorios.UsuariosRepository
 
-class SessionFactory {
+class ControladorUsuarios {
 
     UsuariosRepository repoUsuarios;
 
@@ -21,6 +21,10 @@ class SessionFactory {
         }else{
             usuario.logueado = true
         }
+    }
+
+    def registrar(String usuarioNombre, String usuarioPassword){
+        repoUsuarios.create(usuarioNombre, usuarioPassword)
     }
 
     def validarUsuarioYaLogeado(Usuario usuario){

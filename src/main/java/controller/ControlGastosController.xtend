@@ -2,16 +2,18 @@ package controller
 
 import org.uqbar.xtrest.api.annotation.Controller
 import org.uqbar.xtrest.api.annotation.Post
-import model.SessionFactory
+import model.ControladorUsuarios
 import repositorios.UsuariosRepository
+import org.uqbar.xtrest.api.annotation.Put
+import exceptions.BaseControlGastosException
 
 @Controller
 class ControlGastosController {
 
-    SessionFactory sessionFactory
+    ControladorUsuarios controladorUsuarios
 
     new(){
-        sessionFactory = new SessionFactory(new UsuariosRepository())
+        controladorUsuarios = new ControladorUsuarios(new UsuariosRepository())
     }
 
     @Post("/login/:usuarioNombre/:usuarioPassword")
@@ -24,12 +26,37 @@ class ControlGastosController {
             efectuarLogin(iUsuarioNombre, iUsuarioPassword)
             ok()
         }
-        catch (RuntimeException e) {
+        catch (BaseControlGastosException e) {
             forbidden(e.message);
         }
     }
 
+    @Put("/registracion/:usuarioNombre/:usuarioPassword")
+    def registracionEndPoint(){
+        response.contentType = "application/json"
+        val iUsuarioNombre = String.valueOf(usuarioNombre)
+        val iUsuarioPassword = String.valueOf(usuarioPassword)
+
+        try {
+            efectuarRegistracion(iUsuarioNombre, iUsuarioPassword)
+            ok()
+        }
+        catch (BaseControlGastosException e) {
+            badRequest(e.message);
+        }
+    }
+
+    @Put("/gastos/:descripcion/:monto/:idUsuario")
+    def nuevoGastoEndpoint(){
+
+
+    }
+
+    def efectuarRegistracion(String usuarioNombre, String usuarioPassword){
+        controladorUsuarios.registrar(usuarioNombre, usuarioPassword)
+    }
+
     def efectuarLogin(String usuarioNombre, String usuarioPassword){
-        sessionFactory.login(usuarioNombre, usuarioPassword)
+        controladorUsuarios.login(usuarioNombre, usuarioPassword)
     }
 }

@@ -9,13 +9,13 @@ import exceptions.UsuarioYaEstaLogueadoException
 
 class SessionFactoryTest {
 
-    SessionFactory sessionFactory
+    ControladorUsuarios sessionFactory
     UsuariosRepository repoUsuarios
 
     @Before
     def void setUp(){
         repoUsuarios = new UsuariosRepository()
-        sessionFactory = new SessionFactory(repoUsuarios)
+        sessionFactory = new ControladorUsuarios(repoUsuarios)
     }
 
     @Test
