@@ -6,6 +6,7 @@ import exceptions.UsuarioInexistenteException
 import exceptions.UsuarioDuplicadoException
 import java.util.regex.Pattern
 import exceptions.PasswordMalFormadaException
+import model.ValidadorParametros
 
 class UsuariosRepository {
 
@@ -36,6 +37,11 @@ class UsuariosRepository {
 
     def all(){
         this.usuarios
+    }
+
+    def validarParametrosNoNulos(String usuarioNombre, String passwordUsuario){
+        ValidadorParametros.para("NOMBRE", usuarioNombre).validar()
+        ValidadorParametros.para("PASSWORD", passwordUsuario).validar()
     }
 
     def validarPasswordMalFormada(String password){

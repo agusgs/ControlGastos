@@ -26,7 +26,6 @@ class ControladorGastos {
         for(gasto:gastosDelUsuario){
             sum = sum + gasto.monto
         }
-
         sum
     }
 }
