@@ -1,9 +1,8 @@
 package repositorios
 
-import model.Gasto
 import java.util.List
+import model.Gasto
 import model.Usuario
-import exceptions.ParametroInvalidoException
 import model.ValidadorParametros
 
 class GastosRepository {
@@ -25,6 +24,10 @@ class GastosRepository {
 
     def getGastosPorUsuario(Usuario usuario){
         this.gastos.filter[gasto | gasto.usuario == usuario]
+    }
+
+    def getGastosPorDescripcion(Usuario usuario, String descripcionBuscada){
+        getGastosPorUsuario(usuario).filter[gasto | gasto.descripcion == descripcionBuscada]
     }
 
     def validarParametrosNoNulos(String descripcionGasto, Double montoGasto, Usuario usuarioGasto){

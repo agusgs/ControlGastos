@@ -11,8 +11,7 @@ class ControladorGastos {
     }
 
     def agregarGasto(String descripcionGasto, Double montoGasto, Usuario usuarioGasto){
-
-        gastosRepo.create( descripcionGasto, montoGasto, usuarioGasto)
+        gastosRepo.create( normalizar(descripcionGasto), montoGasto, usuarioGasto)
     }
 
     def todosLosGastos(Usuario usuario){
@@ -27,5 +26,18 @@ class ControladorGastos {
             sum = sum + gasto.monto
         }
         sum
+    }
+
+    def filtrarPorDescripcion(Usuario usuario, String descripcionBuscada){
+        gastosRepo.getGastosPorDescripcion(usuario, normalizar(descripcionBuscada))
+    }
+
+    def normalizar(String textoANormalizar){
+        var textoNormalizado = textoANormalizar
+        textoNormalizado = textoNormalizado.toUpperCase()
+        textoNormalizado = textoNormalizado.trim()
+        System.out.println(textoNormalizado.trim())
+        System.out.println(textoNormalizado)
+        textoNormalizado
     }
 }

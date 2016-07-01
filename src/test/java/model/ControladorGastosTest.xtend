@@ -48,4 +48,83 @@ class ControladorGastosTest {
 
         assertThat(controladorGastos.total(usuario)).isEqualTo(300.0)
     }
+
+    @Test
+    def void siNoHayGastosIngresadosElResultadoDeFiltrarEsUnaListaVacia(){
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "descripcion").isEmpty).isTrue()
+    }
+
+    @Test
+    def void siAgregoUnGastoYFiltroPorLaDescripcionDeEsteElResultadoEsUnaListaConEseGasto(){
+
+        val miGasto = controladorGastos.agregarGasto("gasto ingresado", 1.0, usuario)
+
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado").size).isEqualTo(1)
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado").get(0)).isEqualTo(miGasto)
+    }
+
+    @Test
+    def void filtrarConVariosGastos(){
+        val miGasto1 = controladorGastos.agregarGasto("gasto ingresado", 1.0, usuario)
+        val miGasto2 = controladorGastos.agregarGasto("gasto ingresado", 2.0, usuario)
+        val miGasto3 = controladorGastos.agregarGasto("otro gasto ingresado", 10.0, usuario)
+
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado").size).isEqualTo(2)
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado")
+            .exists[gasto | gasto == miGasto1])
+            .isTrue()
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado")
+            .exists[gasto | gasto == miGasto2])
+            .isTrue()
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado")
+            .exists[gasto | gasto == miGasto3])
+            .isFalse()
+    }
+
+    @Test
+    def void filtrarConVariosUsuariosConVariosGastos(){
+
+        val otroUsuario = new Usuario("otro usuario", "pass1234")
+
+        val miGasto1 = controladorGastos.agregarGasto("gasto ingresado", 1.0, usuario)
+        val miGasto2 = controladorGastos.agregarGasto("gasto ingresado", 2.0, usuario)
+        val miGasto3 = controladorGastos.agregarGasto("gasto ingresado", 10.0, otroUsuario)
+
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado").size).isEqualTo(2)
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado")
+        .exists[gasto | gasto == miGasto1])
+        .isTrue()
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado")
+        .exists[gasto | gasto == miGasto2])
+        .isTrue()
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto ingresado")
+        .exists[gasto | gasto == miGasto3])
+        .isFalse()
+    }
+
+    @Test
+    def void filtrarPorConceptoAgregandoEspaciosALaDescripcionDaElMismoResultado(){
+        val miGasto1 = controladorGastos.agregarGasto("gasto ingresado", 1.0, usuario)
+        val miGasto2 = controladorGastos.agregarGasto("gasto ingresado", 2.0, usuario)
+
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "   gasto ingresado ")
+        .exists[gasto | gasto == miGasto1])
+        .isTrue()
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "   gasto ingresado ")
+        .exists[gasto | gasto == miGasto2])
+        .isTrue()
+    }
+
+    @Test
+    def void filtrarPorConceptoNoEsCaseSensitive(){
+        val miGasto1 = controladorGastos.agregarGasto("gasto ingresado", 1.0, usuario)
+        val miGasto2 = controladorGastos.agregarGasto("gasto ingresado", 2.0, usuario)
+
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "GASTO ingresado")
+        .exists[gasto | gasto == miGasto1])
+        .isTrue()
+        assertThat(controladorGastos.filtrarPorDescripcion(usuario, "gasto INGREsado")
+        .exists[gasto | gasto == miGasto2])
+        .isTrue()
+    }
 }
