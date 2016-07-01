@@ -1,16 +1,20 @@
 package controller
 
-import org.uqbar.xtrest.api.annotation.Controller
-import org.uqbar.xtrest.api.annotation.Post
-import model.ControladorUsuarios
-import repositorios.UsuariosRepository
-import org.uqbar.xtrest.api.annotation.Put
 import exceptions.BaseControlGastosException
 import model.ControladorGastos
+import model.ControladorUsuarios
+import org.uqbar.xtrest.api.annotation.Controller
+import org.uqbar.xtrest.api.annotation.Get
+import org.uqbar.xtrest.api.annotation.Post
+import org.uqbar.xtrest.api.annotation.Put
+import org.uqbar.xtrest.json.JSONUtils
 import repositorios.GastosRepository
+import repositorios.UsuariosRepository
 
 @Controller
 class ControlGastosController {
+
+    extension JSONUtils = new JSONUtils
 
     ControladorUsuarios controladorUsuarios
     ControladorGastos controladorGastos
@@ -63,6 +67,24 @@ class ControlGastosController {
         catch (BaseControlGastosException e) {
             badRequest(e.message);
         }
+    }
+
+    @Get("/gastos/:descripcion/:usuarioId")
+    def gastosDeDescripcionEndpoint(){
+        response.contentType = "application/json"
+        val iDescripcion = String.valueOf(descripcion)
+        val iUsuarioId = Integer.valueOf(usuarioId)
+
+        try {
+            ok(traerGastosDeDescripcion(iDescripcion, iUsuarioId).toJson())
+        }
+        catch (BaseControlGastosException e) {
+            badRequest(e.message);
+        }
+    }
+
+    def traerGastosDeDescripcion(String descripcion, Integer usuarioId){
+        controladorGastos.filtrarPorDescripcion(controladorUsuarios.usuarioConId(usuarioId), descripcion)
     }
 
     def efectuarCreacionDeGasto(String descripcion, Double monto, Integer usuarioId){
