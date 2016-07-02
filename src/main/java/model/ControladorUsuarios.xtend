@@ -3,6 +3,8 @@ package model
 import exceptions.PasswordIncorrectaException
 import exceptions.UsuarioYaEstaLogueadoException
 import repositorios.UsuariosRepository
+import exceptions.UsuarioInexistenteException
+import exceptions.UsuarioNoEstaLogueadoException
 
 class ControladorUsuarios {
 
@@ -21,6 +23,7 @@ class ControladorUsuarios {
         }else{
             usuario.logueado = true
         }
+        usuario
     }
 
     def registrar(String usuarioNombre, String usuarioPassword){
@@ -29,6 +32,22 @@ class ControladorUsuarios {
 
     def usuarioConId(Integer usuarioId){
         repoUsuarios.getUsuarioPorId(usuarioId)
+    }
+
+    def logout(Integer usuarioId){
+        validarUsuarioLogueado(usuarioId)
+        usuarioConId(usuarioId).logout
+    }
+
+    def validarUsuarioLogueado(Integer idUsuario){
+        try{
+            val usuario = usuarioConId(idUsuario)
+            if(!usuario.logueado){
+                throw new UsuarioNoEstaLogueadoException()
+            }
+        }catch(UsuarioInexistenteException e){
+            throw new UsuarioNoEstaLogueadoException()
+        }
     }
 
     def validarUsuarioYaLogeado(Usuario usuario){

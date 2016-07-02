@@ -10,6 +10,7 @@ import org.uqbar.xtrest.api.annotation.Put
 import org.uqbar.xtrest.json.JSONUtils
 import repositorios.GastosRepository
 import repositorios.UsuariosRepository
+import org.uqbar.xtrest.api.XTRest
 
 @Controller
 class ControlGastosController {
@@ -18,9 +19,19 @@ class ControlGastosController {
 
     ControladorUsuarios controladorUsuarios
     ControladorGastos controladorGastos
+    Responses responses
+
     new(){
         controladorUsuarios = new ControladorUsuarios(new UsuariosRepository())
         controladorGastos = new ControladorGastos(new GastosRepository())
+        responses = new Responses()
+    }
+
+    @Post("/setUp")
+    def setUpEndpoint(){
+        val usuarioId1 = efectuarRegistracion("agusgs", "lala123").id
+        efectuarLogin("agusgs", "lala123")
+        ok()
     }
 
     @Post("/login/:usuarioNombre/:usuarioPassword")
@@ -30,11 +41,24 @@ class ControlGastosController {
         val iUsuarioPassword = String.valueOf(usuarioPassword)
 
         try {
-            efectuarLogin(iUsuarioNombre, iUsuarioPassword)
-            ok()
+            ok(efectuarLogin(iUsuarioNombre, iUsuarioPassword).toJson())
         }
         catch (BaseControlGastosException e) {
             forbidden(e.message);
+        }
+    }
+
+    @Post("/logout/:usuarioId")
+    def logoutEndPoint(){
+        response.contentType = "application/json"
+        val iUsuarioId = Integer.valueOf(usuarioId)
+
+        try {
+            efectuarLogout(iUsuarioId)
+            ok()
+        }
+        catch (BaseControlGastosException e) {
+            badRequest(e.message);
         }
     }
 
@@ -45,8 +69,7 @@ class ControlGastosController {
         val iUsuarioPassword = String.valueOf(usuarioPassword)
 
         try {
-            efectuarRegistracion(iUsuarioNombre, iUsuarioPassword)
-            ok()
+            ok(efectuarRegistracion(iUsuarioNombre, iUsuarioPassword).toJson())
         }
         catch (BaseControlGastosException e) {
             badRequest(e.message);
@@ -61,8 +84,8 @@ class ControlGastosController {
         val iUsuarioId = Integer.valueOf(usuarioId)
 
         try {
-            efectuarCreacionDeGasto(iDescripcion, iMonto, iUsuarioId)
-            ok()
+            controladorUsuarios.validarUsuarioLogueado(iUsuarioId)
+            ok(efectuarCreacionDeGasto(iDescripcion, iMonto, iUsuarioId).toJson())
         }
         catch (BaseControlGastosException e) {
             badRequest(e.message);
@@ -76,6 +99,7 @@ class ControlGastosController {
         val iUsuarioId = Integer.valueOf(usuarioId)
 
         try {
+            controladorUsuarios.validarUsuarioLogueado(iUsuarioId)
             ok(traerGastosDeDescripcion(iDescripcion, iUsuarioId).toJson())
         }
         catch (BaseControlGastosException e) {
@@ -91,34 +115,55 @@ class ControlGastosController {
         val iAnio = Integer.valueOf(anio)
 
         try {
-            traerIndiceInflacionario(iAnio, iDescripcion, iUsuarioId)
-            ok()
+            controladorUsuarios.validarUsuarioLogueado(iUsuarioId)
+            ok(traerIndiceInflacionario(iAnio, iDescripcion, iUsuarioId).toJson())
         }
         catch (BaseControlGastosException e) {
             badRequest(e.message);
         }
     }
 
+    def efectuarLogout(Integer usuarioId){
+        controladorUsuarios.logout(usuarioId)
+    }
+
     def traerIndiceInflacionario(Integer anio, String descripcion, Integer usuarioId){
-        controladorGastos.calcularIndiceInflacionario(
-                anio,
-                descripcion,
-                controladorUsuarios.usuarioConId(usuarioId))
+        val usuario = controladorUsuarios.usuarioConId(usuarioId)
+        val indiceAnual = controladorGastos.calcularIndiceInflacionarioAnual(anio, descripcion, usuario)
+        val detalleIndice = controladorGastos.calcularDetalleIndiceInflacionario(anio, descripcion, usuario)
+
+        responses.responseFor(indiceAnual, detalleIndice)
     }
 
     def traerGastosDeDescripcion(String descripcion, Integer usuarioId){
-        controladorGastos.filtrarPorDescripcion(controladorUsuarios.usuarioConId(usuarioId), descripcion)
+        val gastos = controladorGastos.filtrarPorDescripcion(
+                controladorUsuarios.usuarioConId(usuarioId),
+                descripcion)
+
+        val totalParcial = controladorGastos.totalParcial(gastos)
+
+        responses.responseFor(gastos, totalParcial)
     }
 
     def efectuarCreacionDeGasto(String descripcion, Double monto, Integer usuarioId){
-        controladorGastos.agregarGasto(descripcion, monto, controladorUsuarios.usuarioConId(usuarioId))
+        val usuario = controladorUsuarios.usuarioConId(usuarioId)
+
+        controladorGastos.agregarGasto(descripcion, monto, usuario)
+        val gastos = controladorGastos.todosLosGastos(usuario)
+        val total = controladorGastos.total(usuario)
+
+        responses.responseFor(gastos, total)
     }
 
     def efectuarRegistracion(String usuarioNombre, String usuarioPassword){
-        controladorUsuarios.registrar(usuarioNombre, usuarioPassword)
+        responses.responseFor(controladorUsuarios.registrar(usuarioNombre, usuarioPassword))
     }
 
     def efectuarLogin(String usuarioNombre, String usuarioPassword){
-        controladorUsuarios.login(usuarioNombre, usuarioPassword)
+        responses.responseFor(controladorUsuarios.login(usuarioNombre, usuarioPassword))
+    }
+
+    def static void main(String[] args) {
+        XTRest.start(ControlGastosController, 9000)
     }
 }

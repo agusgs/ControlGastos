@@ -16,4 +16,8 @@ class Usuario {
         this.password = passwordUsuario
         this.logueado = false
     }
+
+    def logout(){
+        logueado = false
+    }
 }
