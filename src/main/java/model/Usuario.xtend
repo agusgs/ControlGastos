@@ -20,4 +20,8 @@ class Usuario {
     def logout(){
         logueado = false
     }
+
+    def login(){
+        logueado = true
+    }
 }

@@ -107,6 +107,20 @@ class ControlGastosController {
         }
     }
 
+    @Get("/gastos/:usuarioId")
+    def gastosDelUsuarioEndpoint(){
+        response.contentType = "application/json"
+        val iUsuarioId = Integer.valueOf(usuarioId)
+
+        try {
+            controladorUsuarios.validarUsuarioLogueado(iUsuarioId)
+            ok(traerGastos(iUsuarioId).toJson())
+        }
+        catch (BaseControlGastosException e) {
+            badRequest(e.message);
+        }
+    }
+
     @Get("/indice/:anio/:descripcion/:usuarioId")
     def indiceInflacionarioEndpoint(){
         response.contentType = "application/json"
@@ -135,6 +149,13 @@ class ControlGastosController {
         responses.responseFor(indiceAnual, detalleIndice)
     }
 
+    def traerGastos(Integer usuarioId){
+        val usuario = controladorUsuarios.usuarioConId(usuarioId)
+        val gastos = controladorGastos.todosLosGastos(usuario)
+        val total = controladorGastos.total(usuario)
+
+        responses.responseFor(gastos, total)
+    }
     def traerGastosDeDescripcion(String descripcion, Integer usuarioId){
         val gastos = controladorGastos.filtrarPorDescripcion(
                 controladorUsuarios.usuarioConId(usuarioId),

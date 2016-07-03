@@ -27,7 +27,9 @@ class ControladorUsuarios {
     }
 
     def registrar(String usuarioNombre, String usuarioPassword){
-        repoUsuarios.create(usuarioNombre, usuarioPassword)
+        val usuario = repoUsuarios.create(usuarioNombre, usuarioPassword)
+        usuario.login
+        usuario
     }
 
     def usuarioConId(Integer usuarioId){
