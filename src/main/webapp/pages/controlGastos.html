@@ -12,7 +12,7 @@
     </nav>
     <div class="container">
         <div class="col-md-4 pull-left align-left">
-            <div class="wrapper">
+            <div>
                 <form class="form-signin">
                     <h2 class="form-signin-heading">Nuevo Gasto</h2>
                     <input type="text" class="form-control" placeholder="Descripcion" autofocus="" ng-model="nuevoGasto.descripcion"/>
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="wrapper">
+            <div>
                 <form class="form-signin">
                     <input type="text" class="form-control" placeholder="Descripcion" autofocus="" ng-model="descripcionAFiltrar"/>
                     <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="filtrarGastos()">Filtrar</button>
@@ -53,15 +53,15 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="wrapper">
+            <div >
                 <form class="form-signin">
                     <h2 class="form-signin-heading">Indice Inflacionario</h2>
-                    <input type="text" class="form-control" placeholder="Año" autofocus="" ng-model="indice.anio"/>
+                    <input type="number" class="form-control" placeholder="Año" autofocus="" ng-model="indice.anio"/>
                     <input type="text" class="form-control" placeholder="Descripcion" ng-model="indice.descripcion"/>
                     <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="calcularIndice()">Calcular</button>
                 </form>
             </div>
-            <div class="wrapper">
+            <div>
                 <form class="form-signin">
                     <h4>Inflacion en el {{indice.anio}} segun {{indice.descripcion}}</h4>
                     <h4>Indice: {{resultado.indiceAnual}}</h4>
