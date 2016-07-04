@@ -79,8 +79,8 @@
                     <tbody ng-repeat="itemExplicacion in resultado.detalles">
                     <tr>
                         <td>{{itemExplicacion.mes}}</td>
-                        <td>{{itemExplicacion.indice}}</td>
-                        <td>{{itemExplicacion.monto}}</td>
+                        <td>%{{itemExplicacion.indice}}</td>
+                        <td>${{itemExplicacion.monto}}</td>
                     </tr>
                     </tbody>
                 </table>

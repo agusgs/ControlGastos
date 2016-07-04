@@ -43,20 +43,4 @@ class SessionFactoryTest {
         assertThat(usuario.logueado).isTrue
     }
 
-    @Test
-    def void cuandoUnUsuarioEstaLogeadoNoSeVuelveALogear(){
-        val usuarioTest = "interfaces"
-        val passwordTest = "pass123"
-
-        repoUsuarios.create(usuarioTest, passwordTest)
-        sessionFactory.login(usuarioTest, passwordTest)
-
-        try{
-            sessionFactory.login(usuarioTest, passwordTest)
-            failBecauseExceptionWasNotThrown(UsuarioYaEstaLogueadoException)
-        }catch(UsuarioYaEstaLogueadoException e){
-            // OK
-        }
-    }
-
 }

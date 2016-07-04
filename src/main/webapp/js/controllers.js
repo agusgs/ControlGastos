@@ -65,7 +65,7 @@ app.controller('ControlGastosCtrl', function ($rootScope, $scope, $location, Con
 
     };
 
-    $scope.filtrarGastos = function () {
+        $scope.filtrarGastos = function () {
         if($scope.descripcionAFiltrar){
             ControlGastosService.submitFiltro($scope.usuario, $scope.descripcionAFiltrar, function (response) {
                 $scope.gastosFiltro = response.data;

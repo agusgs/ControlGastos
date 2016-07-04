@@ -18,6 +18,7 @@ class CalculadorDetalleInflacionario {
     def calcular(){
         val List<ItemDetalleInflacionario> detalleInflacionario = newArrayList()
         var indice = 0
+
         while(indice < gastos.size) {
             val gasto = gastos.get(indice)
             if(indice == 0){

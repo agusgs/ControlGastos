@@ -4,7 +4,6 @@ import java.util.List
 import model.Gasto
 import model.Usuario
 import model.ValidadorParametros
-import org.joda.time.DateTime
 
 class GastosRepository {
 

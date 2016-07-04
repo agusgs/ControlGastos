@@ -16,7 +16,6 @@ class ControladorUsuarios {
 
     def login(String usuarioNombre, String usuarioPassword){
         val usuario = repoUsuarios.getUsuarioPorNombre(usuarioNombre)
-//        validarUsuarioYaLogeado(usuario)
 
         if(!(usuario.password == usuarioPassword)){
             throw new PasswordIncorrectaException(usuarioNombre)
@@ -49,12 +48,6 @@ class ControladorUsuarios {
             }
         }catch(UsuarioInexistenteException e){
             throw new UsuarioNoEstaLogueadoException()
-        }
-    }
-
-    def validarUsuarioYaLogeado(Usuario usuario){
-        if(usuario.logueado){
-            throw new UsuarioYaEstaLogueadoException(usuario)
         }
     }
 }
