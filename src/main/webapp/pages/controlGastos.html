@@ -1,0 +1,90 @@
+<div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-brand">Hola {{usuario.nombre}} estos son tus gastos</p>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><p class="navbar-brand">Llevas gastado $ {{gastos.total}} en total</p></li>
+                <li><img ng-click=logout() src="../images/power-button-hi.png" class="image-navbar"/></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="col-md-4 pull-left align-left">
+            <div class="wrapper">
+                <form class="form-signin">
+                    <h2 class="form-signin-heading">Nuevo Gasto</h2>
+                    <input type="text" class="form-control" placeholder="Descripcion" autofocus="" ng-model="nuevoGasto.descripcion"/>
+                    <input type="number" class="form-control" placeholder="Monto" ng-model="nuevoGasto.monto"/>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="agregarGasto()">Agregar</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="wrapper">
+                <form class="form-signin">
+                    <input type="text" class="form-control" placeholder="Descripcion" autofocus="" ng-model="descripcionAFiltrar"/>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="filtrarGastos()">Filtrar</button>
+                </form>
+            </div>
+            <div class="table-responsive tabla">
+                <table class="table table-condensed table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Descripcion</th>
+                        <th>Monto</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="gasto in gastosFiltro.gastos">
+                    <tr>
+                        <td>{{gasto.mesAnio}}</td>
+                        <td>{{gasto.descripcion}}</td>
+                        <td>{{gasto.monto}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Subtotal: {{gastosFiltro.total}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="wrapper">
+                <form class="form-signin">
+                    <h2 class="form-signin-heading">Indice Inflacionario</h2>
+                    <input type="text" class="form-control" placeholder="Año" autofocus="" ng-model="indice.anio"/>
+                    <input type="text" class="form-control" placeholder="Descripcion" ng-model="indice.descripcion"/>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="calcularIndice()">Calcular</button>
+                </form>
+            </div>
+            <div class="wrapper">
+                <form class="form-signin">
+                    <h4>Inflacion en el {{indice.anio}} segun {{indice.descripcion}}</h4>
+                    <h4>Indice: {{resultado.indiceAnual}}</h4>
+                </form>
+            </div>
+            <div class="table-responsive tabla">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Explicación</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="itemExplicacion in resultado.detalles">
+                    <tr>
+                        <td>{{itemExplicacion.mes}}</td>
+                        <td>{{itemExplicacion.indice}}</td>
+                        <td>{{itemExplicacion.monto}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>>
+        </div>
+    </div>
+</div>

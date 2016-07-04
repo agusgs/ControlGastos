@@ -44,7 +44,7 @@ class ControlGastosController {
             ok(efectuarLogin(iUsuarioNombre, iUsuarioPassword).toJson())
         }
         catch (BaseControlGastosException e) {
-            forbidden(e.message);
+            forbidden(e.message.toJson());
         }
     }
 
@@ -58,7 +58,7 @@ class ControlGastosController {
             ok()
         }
         catch (BaseControlGastosException e) {
-            badRequest(e.message);
+            badRequest(e.message.toJson());
         }
     }
 
@@ -72,7 +72,7 @@ class ControlGastosController {
             ok(efectuarRegistracion(iUsuarioNombre, iUsuarioPassword).toJson())
         }
         catch (BaseControlGastosException e) {
-            badRequest(e.message);
+            badRequest(e.message.toJson());
         }
     }
 
@@ -88,7 +88,7 @@ class ControlGastosController {
             ok(efectuarCreacionDeGasto(iDescripcion, iMonto, iUsuarioId).toJson())
         }
         catch (BaseControlGastosException e) {
-            badRequest(e.message);
+            badRequest(e.message.toJson());
         }
     }
 
@@ -103,7 +103,7 @@ class ControlGastosController {
             ok(traerGastosDeDescripcion(iDescripcion, iUsuarioId).toJson())
         }
         catch (BaseControlGastosException e) {
-            badRequest(e.message);
+            badRequest(e.message.toJson());
         }
     }
 
@@ -117,7 +117,7 @@ class ControlGastosController {
             ok(traerGastos(iUsuarioId).toJson())
         }
         catch (BaseControlGastosException e) {
-            badRequest(e.message);
+            badRequest(e.message.toJson());
         }
     }
 
@@ -133,7 +133,7 @@ class ControlGastosController {
             ok(traerIndiceInflacionario(iAnio, iDescripcion, iUsuarioId).toJson())
         }
         catch (BaseControlGastosException e) {
-            badRequest(e.message);
+            badRequest(e.message.toJson());
         }
     }
 
