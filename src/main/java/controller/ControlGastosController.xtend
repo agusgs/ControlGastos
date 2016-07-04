@@ -11,6 +11,7 @@ import org.uqbar.xtrest.json.JSONUtils
 import repositorios.GastosRepository
 import repositorios.UsuariosRepository
 import org.uqbar.xtrest.api.XTRest
+import org.joda.time.DateTime
 
 @Controller
 class ControlGastosController {
@@ -29,9 +30,34 @@ class ControlGastosController {
 
     @Post("/setUp")
     def setUpEndpoint(){
-        val usuarioId1 = efectuarRegistracion("agusgs", "lala123").id
-        efectuarLogin("agusgs", "lala123")
-        ok()
+        response.contentType = "application/json"
+
+        try{
+            val usuarioId1 = efectuarRegistracion("agusgs", "lala123").id
+            efectuarCreacionDeGasto("supermercado", 2002.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 1892.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 1589.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 1369.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 1234.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 965.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 901.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 865.0, usuarioId1)
+            efectuarCreacionDeGasto("supermercado", 865.0, usuarioId1)
+
+            val gastos = controladorGastos.todosLosGastos(controladorUsuarios.usuarioConId(usuarioId1))
+            gastos.get(1).fechaCreacion = new DateTime(2016,5,4,1,1)
+            gastos.get(2).fechaCreacion = new DateTime(2016,4,4,1,1)
+            gastos.get(3).fechaCreacion = new DateTime(2016,3,4,1,1)
+            gastos.get(4).fechaCreacion = new DateTime(2016,2,4,1,1)
+            gastos.get(5).fechaCreacion = new DateTime(2016,1,4,1,1)
+            gastos.get(6).fechaCreacion = new DateTime(2015,12,4,1,1)
+            gastos.get(7).fechaCreacion = new DateTime(2015,11,4,1,1)
+            gastos.get(8).fechaCreacion = new DateTime(2015,10,4,1,1)
+
+            ok("Setupeado")
+        }catch(BaseControlGastosException e){
+            badRequest(e.message.toJson())
+        }
     }
 
     @Post("/login/:usuarioNombre/:usuarioPassword")
